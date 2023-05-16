@@ -11,6 +11,7 @@ from hyperopt.pyll import scope
 import mlflow
 
 from prefect import flow, task
+from prefect.task_runners import SequentialTaskRunner
 
 @task
 def read_dataframe(filename):
@@ -129,7 +130,7 @@ def train_best_model(train, valid, y_val, dv):
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
 
-@flow
+@flow(task_runner=SequentialTaskRunner())
 def main(train_path: str="./data/green_tripdata_2021-01.parquet",
         val_path: str="./data/green_tripdata_2021-02.parquet"):
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
