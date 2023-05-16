@@ -6,4 +6,4 @@ seaborn
 hyperopt
 xgboost
 fastparquet
-prefect==2.3.1
+prefect==2.10.4
