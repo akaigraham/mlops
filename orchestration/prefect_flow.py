@@ -30,4 +30,27 @@ def read_dataframe(filename):
     
     return df
 
+@task
+def add_features(df_train, df_val):
+    print(len(df_train))
+    print(len(df_val))
 
+    df_train['PU_DO'] = df_train['PULocationID'] + '_' + df_train['DOLocationID']
+    df_val['PU_DO'] = df_val['PULocationID'] + '_' + df_val['DOLocationID']
+
+    categorical = ['PU_DO'] #'PULocationID', 'DOLocationID']
+    numerical = ['trip_distance']
+
+    dv = DictVectorizer()
+
+    train_dicts = df_train[categorical + numerical].to_dict(orient='records')
+    X_train = dv.fit_transform(train_dicts)
+
+    val_dicts = df_val[categorical + numerical].to_dict(orient='records')
+    X_val = dv.transform(val_dicts)
+
+    target = 'duration'
+    y_train = df_train[target].values
+    y_val = df_val[target].values
+
+    return X_train, X_val, y_train, y_val, dv
