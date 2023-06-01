@@ -3,6 +3,7 @@ data/
 .bin
 *.db
 output/
+prefect-examples/
 
 *.parquet
 *.html
