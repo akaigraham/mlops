@@ -28,3 +28,38 @@ def read_data(filename: str) -> pd.DataFrame:
     df[categorical] = df[categorical].astype(str)
     
     return df
+
+def add_features(
+    df_train: pd.DataFrame, 
+    df_val: pd.DataFrame   
+) -> tuple(
+    [scipy.sparse._csr.csr_matrix,
+     scipy.sparse._csr.csr_matrix,
+     np.ndarray,
+     np.ndarray,
+     DictVectorizer]
+):
+    """
+    Add features to the model
+    """
+    # combine pickup and drop off into one feature
+    df_train['PU_DO'] = df_train['PULocationID'] + '-' + df_train['DOLocationID']
+    df_val['PU_DO'] = df_val['PULocationID'] + '-' + df_val['DOLocationID']
+    
+    # specify cat and numerical features
+    categorical = ['PU_DO']
+    numerical = ['trip_distance']
+
+    dv = DictVectorizer()
+    
+    train_dicts = df_train[categorical + numerical].to_dict(orient='records')
+    X_train = dv.fit_transform(train_dicts)
+    
+    val_dicts = df_val[categorical + numerical].to_dict(orient='records')
+    X_val = dv.transform(val_dicts)
+    
+    target = 'duration'
+    y_train = df_train[target].values
+    y_val = df_val[target].values
+    
+    return X_train, X_val, y_train, y_val, dv
