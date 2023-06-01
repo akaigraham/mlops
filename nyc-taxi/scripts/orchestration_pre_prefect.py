@@ -112,3 +112,27 @@ def train_best_model(
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow") 
     
     return None
+
+def main_flow(
+    train_path: str = "../data/green_tripdata_2022-01.parquet",
+    val_path: str = "../data/green_tripdata_2022-02.parquet"
+) -> None:
+    """
+    The main training pipeline
+    """
+    
+    # mlflow settings
+    mlflow.set_tracking_uri("http://ec2-44-201-134-182.compute-1.amazonaws.com:5000")
+    mlflow.set_experiment("nyc-taxi")
+    
+    # load data
+    df_train = read_data(train_path)
+    df_val = read_data(val_path)
+    
+    # transform
+    X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
+    
+    # train
+    train_best_model(X_train, X_val, y_train, y_val, dv)
+    
+    return None
