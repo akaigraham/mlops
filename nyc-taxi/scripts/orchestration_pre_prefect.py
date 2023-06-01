@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import scipy 
+import sklearn
 from sklearn.feature_extraction import DictVectorizer 
 from sklearn.metrics import mean_squared_error 
 import mlflow
@@ -103,13 +104,14 @@ def train_best_model(
         
         y_pred = booster.predict(valid)
         rmse = mean_squared_error(y_val, y_pred, squared=False)
-        mlflow.log_metrics('rmse', rmse)
+        mlflow.log_metric('rmse', rmse)
         
         Path("../models").mkdir(exist_ok=True)
         with open("../models/preprocessor.b", "wb") as f_out:
             pickle.dump(dv, f_out)
-        mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
-        mlflow.xgboost.log_model(booster, artifact_path="models_mlflow") 
+        mlflow.log_artifact("../models/preprocessor.b", artifact_path="preprocessor")
+
+        mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
     
     return None
 
@@ -136,3 +138,6 @@ def main_flow(
     train_best_model(X_train, X_val, y_train, y_val, dv)
     
     return None
+
+if __name__ == "__main__":
+    main_flow()
