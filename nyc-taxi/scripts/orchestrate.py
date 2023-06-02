@@ -111,8 +111,8 @@ def train_best_model(
 
 @flow
 def master_flow(
-    train_path: str = "./data/green_tripdata_2022-01.parquet",
-    val_path: str = "./data/green_tripdata_2022-02.parquet",
+    train_path: str = "green_tripdata_2022-01.parquet",
+    val_path: str = "green_tripdata_2022-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
@@ -121,8 +121,10 @@ def master_flow(
     mlflow.set_experiment("nyc-taxi-experiment")
 
     # Load
-    df_train = read_data(train_path)
-    df_val = read_data(val_path)
+    train_file = pathlib.Path('./data/'+train_path)
+    val_file = pathlib.Path('./data/'+val_path)
+    df_train = read_data(train_file)
+    df_val = read_data(val_file)
 
     # Transform
     X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
