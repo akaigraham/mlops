@@ -1,4 +1,5 @@
 import pathlib
+import os
 import pickle
 import pandas as pd
 import numpy as np
@@ -111,8 +112,8 @@ def train_best_model(
 
 @flow
 def master_flow(
-    train_path: str = "~/github_repos/mlops/nyc_taxi/data/green_tripdata_2022-01.parquet",
-    val_path: str = "~/github_repos/mlops/nyc_taxi/data/green_tripdata_2022-02.parquet",
+    train_path: str = "./data/green_tripdata_2022-01.parquet",
+    val_path: str = "./data/green_tripdata_2022-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
@@ -121,6 +122,7 @@ def master_flow(
     mlflow.set_experiment("nyc-taxi")
 
     # Load
+    print(os.getcwd())
     df_train = read_data(train_path)
     df_val = read_data(val_path)
 
