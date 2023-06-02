@@ -110,9 +110,9 @@ def train_best_model(
 
 
 @flow
-def main_flow(
-    train_path: str = "./data/green_tripdata_2022-01.parquet",
-    val_path: str = "./data/green_tripdata_2022-02.parquet",
+def master_flow(
+    train_path: str = "~/github_repos/mlops/nyc_taxi/data/green_tripdata_2022-01.parquet",
+    val_path: str = "~/github_repos/mlops/nyc_taxi/data/green_tripdata_2022-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
@@ -132,4 +132,4 @@ def main_flow(
 
 
 if __name__ == "__main__":
-    main_flow()
+    master_flow()
