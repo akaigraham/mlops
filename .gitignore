@@ -7,7 +7,7 @@ prefect-examples/
 
 *.parquet
 *.html
-*.csv
+# *.csv
 *.DS_Store
 
 .venv
