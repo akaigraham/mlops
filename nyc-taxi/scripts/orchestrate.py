@@ -1,5 +1,4 @@
 import pathlib
-import os
 import pickle
 import pandas as pd
 import numpy as np
@@ -118,11 +117,10 @@ def master_flow(
     """The main training pipeline"""
 
     # MLflow settings
-    mlflow.set_tracking_uri("http://ec2-44-201-134-182.compute-1.amazonaws.com:5000")
-    mlflow.set_experiment("nyc-taxi")
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    mlflow.set_experiment("nyc-taxi-experiment")
 
     # Load
-    print(os.getcwd())
     df_train = read_data(train_path)
     df_val = read_data(val_path)
 
