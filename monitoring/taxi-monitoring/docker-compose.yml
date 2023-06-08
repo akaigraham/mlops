@@ -1,7 +1,7 @@
 version: '3.7'
 
-volumes: 
-  grafana_data: {}
+volumes:
+    grafana_data: {}
 
 networks:
   front-tier:
@@ -12,23 +12,23 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_PASSWORD: example 
     ports:
       - "5432:5432"
     networks:
-      - back-tier
+      - back-tier 
 
   adminer:
-    image: adminer
-    restart: always
+    image: adminer 
+    restart: always 
     ports:
       - "8080:8080"
     networks:
       - back-tier
-      - front-tier 
+      - front-tier
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana 
     user: "472"
     ports:
       - "3000:3000"
