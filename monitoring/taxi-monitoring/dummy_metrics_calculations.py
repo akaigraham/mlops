@@ -8,7 +8,7 @@ import pandas as pd
 import io 
 import psycopg 
 
-logging.basicConfig(level=logging.INFO, formats="%(asctime)s [%(levelname)s]: %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
 SEND_TIMEOUT = 10
 rand = random.Random()
