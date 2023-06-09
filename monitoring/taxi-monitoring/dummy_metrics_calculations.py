@@ -7,7 +7,7 @@ import pytz
 import pandas as pd 
 import io 
 import psycopg 
-import numpy as np
+import joblib
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
@@ -24,6 +24,10 @@ create table dummy_metrics(
     value3 float
 )
 """
+
+reference_data = pd.read_parquet('../data/reference.parquet')
+with open('../models/lin_reg.bin', 'rb') as f_in:
+    model = joblib.load(f_in)
 
 def prep_db():
     
