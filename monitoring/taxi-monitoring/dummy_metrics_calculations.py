@@ -7,6 +7,7 @@ import pytz
 import pandas as pd 
 import io 
 import psycopg 
+import numpy as np
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
