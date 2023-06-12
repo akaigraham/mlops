@@ -1,4 +1,4 @@
-from datetime import datetime 
+import datetime
 import time 
 import random 
 import logging 
@@ -28,14 +28,14 @@ create table dummy_metrics (
 )
 """
 
-reference_data = pd.read_parquet('data/reference.parquet')
-with open('models/lin_reg.bin', 'rb') as f_in:
+reference_data = pd.read_parquet('./data/reference.parquet')
+with open('./models/lin_reg.bin', 'rb') as f_in:
     model = joblib.load(f_in)
 
-raw_data = pd.read_parquet('data/green_tripdata_2022-02.parquet')
+raw_data = pd.read_parquet('./data/green_tripdata_2022-02.parquet')
 
-begin = datetime(2022,2,1,0,0)
-num_features = ['passenger_count', 'trip_distance', 'fare_amount', 'total_amount']
+begin = datetime.datetime(2022,2,1,0,0)
+num_features = ['passenger_count', 'trip_distance', 'fare_amount']
 cat_features = ['PULocationID', 'DOLocationID']
 column_mapping = ColumnMapping(
     prediction='prediction',
@@ -56,7 +56,7 @@ def prep_db():
         res = conn.execute("SELECT 1 FROM pg_database WHERE datname='test'")
         if len(res.fetchall()) == 0:
             conn.execute("create database test;")
-        with psycopg.connect("host=localhost post=5432 dbname=test user=postgres password=example") as conn:
+        with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example") as conn:
             conn.execute(create_table_statement)
             
 @task 
@@ -84,13 +84,13 @@ def calculate_metrics_postgres(curr, i):
 @flow
 def batch_monitoring_backfill():
     prep_db()
-    last_send = datetime.now() - datetime.timedelta(seconds=10)
+    last_send = datetime.datetime.now() - datetime.timedelta(seconds=10)
     with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example", autocommit=True) as conn:
         for i in range(0, 27):
             with conn.cursor() as curr:
                 calculate_metrics_postgres(curr, i)
                 
-                new_send = datetime.now()
+                new_send = datetime.datetime.now()
                 seconds_elapsed = (new_send - last_send).total_seconds()
                 if seconds_elapsed < SEND_TIMEOUT:
                     time.sleep(SEND_TIMEOUT - seconds_elapsed)

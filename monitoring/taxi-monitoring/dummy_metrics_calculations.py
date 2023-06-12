@@ -25,11 +25,11 @@ create table dummy_metrics(
 )
 """
 
-reference_data = pd.read_parquet('../data/reference.parquet')
-with open('../models/lin_reg.bin', 'rb') as f_in:
+reference_data = pd.read_parquet('./data/reference.parquet')
+with open('./models/lin_reg.bin', 'rb') as f_in:
     model = joblib.load(f_in)
     
-raw_data = pd.read_parquet('../data/green_tripdata_2022-02.parquet')
+raw_data = pd.read_parquet('./data/green_tripdata_2022-02.parquet')
 begin = datetime.datetime(2022, 2, 1, 0, 0)
 
 def prep_db():
