@@ -28,4 +28,7 @@ create table dummy_metrics (
 )
 """
 
+reference_data = pd.read_parquet('data/reference.parquet')
+with open('models/lin_reg.bin', 'rb') as f_in:
+    model = joblib.load(f_in)
 
