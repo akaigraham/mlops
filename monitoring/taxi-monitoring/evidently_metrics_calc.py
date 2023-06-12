@@ -44,3 +44,9 @@ column_mapping = ColumnMapping(
     target=None
 )
 
+report = Report(metrics = [
+    ColumnDriftMetric(column_name='prediction'),
+    DatasetDriftMetric(),
+    DatasetMissingValuesMetric()
+])
+
