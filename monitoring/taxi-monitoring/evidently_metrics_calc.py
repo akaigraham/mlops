@@ -32,3 +32,15 @@ reference_data = pd.read_parquet('data/reference.parquet')
 with open('models/lin_reg.bin', 'rb') as f_in:
     model = joblib.load(f_in)
 
+raw_data = pd.read_parquet('data/green_tripdata_2022-02.parquet')
+
+begin = datetime(2022,2,1,0,0)
+num_features = ['passenger_count', 'trip_distance', 'fare_amount', 'total_amount']
+cat_features = ['PULocationID', 'DOLocationID']
+column_mapping = ColumnMapping(
+    prediction='prediction',
+    numerical_features=num_features,
+    categorical_features=cat_features,
+    target=None
+)
+
