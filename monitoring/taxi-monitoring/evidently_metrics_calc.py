@@ -59,3 +59,25 @@ def prep_db():
         with psycopg.connect("host=localhost post=5432 dbname=test user=postgres password=example") as conn:
             conn.execute(create_table_statement)
             
+@task 
+def calculate_metrics_postgres(curr, i):
+    current_data = raw_data[(raw_data.lpep_pickup_datetime >= (begin + datetime.timedelta(i))) &
+                            (raw_data.lpep_pickup_datetime < (begin + datetime.timedelta(i + 1)))]
+    
+    current_data['prediction'] = model.predict(current_data[num_features + cat_features].fillna(0))
+    
+    report.run(reference_data=reference_data,
+               current_data=current_data,
+               column_mapping=column_mapping)
+    
+    result = report.as_dict()
+    
+    prediction_drift = result['metrics'][0]['result']['drift_score']
+    num_drifted_columns = result['metrics'][1]['result']['number_of_drifted_columns']
+    share_missing_values = result['metrics'][2]['result']['current']['share_of_missing_values']
+    
+    curr.execute(
+        "insert into dummy_metrics(timestamp, prediction_drift, num_drifted_columns, share_missing_values) values (%s, %s, %s, %s)",
+        (begin + datetime.timedelta(i), prediction_drift, num_drifted_columns, share_missing_values)
+    )
+    
