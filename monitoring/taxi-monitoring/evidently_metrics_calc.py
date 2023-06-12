@@ -81,3 +81,22 @@ def calculate_metrics_postgres(curr, i):
         (begin + datetime.timedelta(i), prediction_drift, num_drifted_columns, share_missing_values)
     )
     
+@flow
+def batch_monitoring_backfill():
+    prep_db()
+    last_send = datetime.now() - datetime.timedelta(seconds=10)
+    with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example", autocommit=True) as conn:
+        for i in range(0, 27):
+            with conn.cursor() as curr:
+                calculate_metrics_postgres(curr, i)
+                
+                new_send = datetime.now()
+                seconds_elapsed = (new_send - last_send).total_seconds()
+                if seconds_elapsed < SEND_TIMEOUT:
+                    time.sleep(SEND_TIMEOUT - seconds_elapsed)
+                while last_send < new_send:
+                    last_send = last_send + datetime.timedelta(seconds=10)
+                logging.info("data sent")
+                
+if __name__ == "__main__":
+    batch_monitoring_backfill()
